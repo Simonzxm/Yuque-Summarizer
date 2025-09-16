@@ -1,8 +1,10 @@
+import json
 import re
 import requests
 
-with open("yuque.key", "r") as f:
-    key = f.read()
+with open("config.json", "r") as f:
+    config = json.load(f)
+    key = config["yuque_api_key"]
 
 headers = {"X-Auth-Token": key}
 

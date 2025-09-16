@@ -1,12 +1,12 @@
+import json
 from openai import OpenAI
 
-with open("openrouter.key", "r") as f:
-    key = f.read()
-
-client = OpenAI(
-    base_url = "https://openrouter.ai/api/v1",
-    api_key = key,
-)
+with open("config.json", "r") as f:
+    config = json.load(f)
+    client = OpenAI(
+        base_url = config["llm_base_url"],
+        api_key = config["llm_api_key"]
+    )
 
 def summarize(text):
     """Summarize the html"""
