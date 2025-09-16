@@ -7,21 +7,22 @@ with open("config.json", "r") as f:
         base_url = config["llm_base_url"],
         api_key = config["llm_api_key"]
     )
+    model = config["llm_model"]
 
-def summarize(text):
+def summarize(title, body):
     """Summarize the html"""
     
     completion = client.chat.completions.create(
         extra_headers = {},
         extra_body = {},
-        model = "openrouter/sonoma-sky-alpha",
+        model = model,
         messages = [
             {
                 "role": "user",
                 "content": [
                     {
                         "type": "text",
-                        "text": "Summarize the html below and reply only the summary in Chinese:" + text
+                        "text": f"Summarize the html below and reply only the summary in Chinese. Title: {title}, Body: {body}"
                     }
                 ]
             }

@@ -15,15 +15,36 @@ def format_url(url):
         url = "https://" + url
 
     match = re.match(r"^(https?://)([^/]+)/([^/]+)/([^/]+)/([^/]+)$", url)
-
     if match:
         scheme, netloc, group_login, book_slug, doc_slug = match.groups()
         new_path = f"/api/v2/repos/{group_login}/{book_slug}/docs/{doc_slug}"
         formatted_url = f"{scheme}{netloc}{new_path}"
-        return formatted_url
+        return {"url": formatted_url, "type": "doc"}
+    
+    match = re.match(r"^(https?://)([^/]+)/([^/]+)/([^/]+)$", url)
+    if match:
+        scheme, netloc, group_login, book_slug = match.groups()
+        new_path = f"/api/v2/repos/{group_login}/{book_slug}/docs"
+        formatted_url = f"{scheme}{netloc}{new_path}"
+        return {"url": formatted_url, "type": "repo"}
 
-def get(url):
+def get_doc(url):
     """Get the Yuque content of the URL"""
+
     response = requests.get(url, headers = headers)
     doc = response.json()
-    return doc["data"]["body"]
+    return doc["data"]
+
+def get_doc_urls(url):
+    """Get the doc urls under the repo of the URL"""
+
+    response = requests.get(url, headers = headers)
+    doc = response.json()
+    count = doc["meta"]["total"]
+    print(f"{count} docs under this repo..")
+    urls = []
+    for i in range(count):
+        urls.append(url + "/" + doc["data"][i]["slug"])
+    return urls
+
+

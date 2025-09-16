@@ -1,5 +1,6 @@
 {
     "yuque_api_key": "",
-    "llm_base_url": "",
-    "llm_api_key": ""
+    "llm_base_url": "https://openrouter.ai/api/v1",
+    "llm_api_key": "",
+    "llm_model": "openrouter/sonoma-sky-alpha"
 }
