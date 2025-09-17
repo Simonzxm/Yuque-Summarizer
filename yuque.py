@@ -1,6 +1,5 @@
 import json
 import re
-import requests
 
 with open("config.json", "r") as f:
     config = json.load(f)
@@ -28,23 +27,21 @@ def format_url(url):
         formatted_url = f"{scheme}{netloc}{new_path}"
         return {"url": formatted_url, "type": "repo"}
 
-def get_doc(url):
+async def get_doc(session, url):
     """Get the Yuque content of the URL"""
+    async with session.get(url, headers=headers) as response:
+        doc = await response.json()
+        return doc["data"]
 
-    response = requests.get(url, headers = headers)
-    doc = response.json()
-    return doc["data"]
-
-def get_doc_urls(url):
+async def get_doc_urls(session, url):
     """Get the doc urls under the repo of the URL"""
-
-    response = requests.get(url, headers = headers)
-    doc = response.json()
-    count = doc["meta"]["total"]
-    print(f"{count} docs under this repo..")
-    urls = []
-    for i in range(count):
-        urls.append(url + "/" + doc["data"][i]["slug"])
-    return urls
-
-
+    async with session.get(url, headers=headers) as response:
+        doc = await response.json()
+        count = doc["meta"]["total"]
+        print(f"{count} docs under this repo..")
+        
+        urls = []
+        for i in range(count):
+            urls.append(url + "/" + doc["data"][i]["slug"])
+            
+        return urls

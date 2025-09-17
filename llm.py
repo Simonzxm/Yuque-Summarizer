@@ -1,18 +1,18 @@
 import json
-from openai import OpenAI
+from openai import AsyncOpenAI
 
 with open("config.json", "r") as f:
     config = json.load(f)
-    client = OpenAI(
+    client = AsyncOpenAI(
         base_url = config["llm_base_url"],
         api_key = config["llm_api_key"]
     )
     model = config["llm_model"]
 
-def summarize(title, body):
+async def summarize(title, body):
     """Summarize the html"""
     
-    completion = client.chat.completions.create(
+    completion = await client.chat.completions.create(
         extra_headers = {},
         extra_body = {},
         model = model,
